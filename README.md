@@ -1,5 +1,7 @@
 # RoverReminder
 
+![icon](./ICON.png)
+
 ## 部署方式
 
 ```shell

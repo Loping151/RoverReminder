@@ -59,6 +59,7 @@ async def switch_push(bot: Bot, ev: Event):
                 bot_self_id=ev.bot_self_id or "",
                 uid=uid,
                 user_email=auto_email,
+                email_fail_count=0,
             )
             auto_email_msg = f"\n已设置默认邮箱：{auto_email}"
         else:
@@ -101,6 +102,7 @@ async def set_push_email(bot: Bot, ev: Event):
         bot_self_id=ev.bot_self_id or "",
         uid=uid,
         user_email=email,
+        email_fail_count=0,
     )
     msg = f"uid {uid} 邮箱已设置为 {email}"
     return await bot.send((" " if at_sender else "") + msg, at_sender)
