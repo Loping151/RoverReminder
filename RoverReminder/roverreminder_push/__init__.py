@@ -94,7 +94,7 @@ async def _handle_record(record: WavesStaminaRecord, threshold_default: int, now
     if not record.user_email:
         logger.debug(f"[RoverReminder] 跳过 uid={record.uid}：未设置邮箱")
         return
-    if record.email_fail_count is not None and record.email_fail_count >= 3:
+    if record.email_fail_count is not None and record.email_fail_count >= 5:
         logger.debug(f"[RoverReminder] 跳过 uid={record.uid}：连续失败次数过多 ({record.email_fail_count})")
         return
 
