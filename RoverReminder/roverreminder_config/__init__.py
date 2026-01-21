@@ -115,8 +115,8 @@ async def set_push_threshold(bot: Bot, ev: Event):
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
     value = int(raw_value)
-    if value < 120:
-        msg = "体力阈值不得少于120"
+    if value < 120 or value > 240:
+        msg = "体力阈值范围为120~240"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
     uid = await WavesBind.get_uid_by_game(ev.user_id, ev.bot_id)

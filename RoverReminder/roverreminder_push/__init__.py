@@ -113,6 +113,8 @@ async def _handle_record(record: WavesStaminaRecord, threshold_default: int, now
     threshold = record.stamina_threshold or threshold_default
     if threshold < 120:
         threshold = 120
+    if threshold > 240:
+        threshold = 240
 
     if not _should_try_send(record, threshold, now_ts):
         cooldown_hours = max(1, threshold // 10 - 1)
@@ -256,4 +258,3 @@ async def roverreminder_check_task():
                 await _handle_record(record, threshold_default, now_ts)
             except Exception:
                 logger.exception(f"[RoverReminder] 处理记录失败 uid={record.uid}")
-
