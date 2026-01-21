@@ -1,0 +1,23 @@
+{
+  "provider": "smtp",
+  "smtp": {
+    "host": "smtp.example.com",
+    "port": 465,
+    "user": "your_email@example.com",
+    "password": "your_password",
+    "sender": "your_email@example.com",
+    "sender_name": "Your Name",
+    "use_ssl": true,
+    "starttls": false
+  },
+  "qq": {
+    "host": "smtp.qq.com",
+    "port": 465,
+    "user": "123456789@qq.com",
+    "auth_code": "授权码",
+    "sender": "123456789@qq.com",
+    "sender_name": "小维",
+    "use_ssl": true,
+    "starttls": false
+  }
+}

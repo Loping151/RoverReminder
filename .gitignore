@@ -1,0 +1,8 @@
+# Custom template override
+RoverReminder/mail/custom_template.py
+
+# Common
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
