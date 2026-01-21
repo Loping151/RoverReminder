@@ -22,19 +22,13 @@ git clone --depth=1 https://github.com/Loping151/RoverReminder
 
 只需要修改两个文件：
 
-1) 配置文件 `config.json`（由 `config.json.template` 复制）
+1) 配置文件路径：`gsuid_core/data/RoverReminder/mail/config.json`
 
-```
-cp gsuid_core/gsuid_core/plugins/RoverReminder/RoverReminder/mail/config.json.template \
-   gsuid_core/data/RoverReminder/mail/config.json
-```
+启动后会自动生成，直接修改该文件即可。
 
-2) 邮件模板 `template.html`（由 `template.html.example` 复制）
+2) 邮件模板路径：`gsuid_core/data/RoverReminder/mail/template.html`
 
-```
-cp gsuid_core/gsuid_core/plugins/RoverReminder/RoverReminder/mail/template.html.example \
-   gsuid_core/data/RoverReminder/mail/template.html
-```
+启动后会自动生成，直接修改该文件即可。
 
 模板内可用变量：
 - `{{uid}}`
@@ -57,7 +51,7 @@ QQ 邮箱说明：
 
 ## 使用说明
 
-- 开启推送：`开启体力推送`
-- 关闭推送：`关闭体力推送`
+- 开启推送：`ww开启体力推送`
+- 关闭推送：`ww关闭体力推送`
 - 设置邮箱：`ww推送邮箱 123456789@gmail.com`
-- 设置阈值：`推送阈值 180`
+- 设置阈值：`ww推送阈值 180`
