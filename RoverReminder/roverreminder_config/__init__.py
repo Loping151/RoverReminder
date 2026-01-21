@@ -96,7 +96,7 @@ async def set_push_email(bot: Bot, ev: Event):
     if not email:
         msg = f"请输入邮箱，例如【{PREFIX}推送邮箱 123456789@qq.com】"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
-    if re.match(r"^[A-Za-z0-9_.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9-.]+$", email):
+    if not "@" in email:
         msg = "邮箱格式不正确，请检查后重试"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
