@@ -9,6 +9,11 @@ from typing import Any, Dict, Tuple
 from ..utils.resource.RESOURCE_PATH import MAIN_PATH
 from .template import build_stamina_html
 
+# 全局邮件队列
+_mail_queue: asyncio.Queue = asyncio.Queue()
+_consumer_task: asyncio.Task | None = None
+_queue_lock = asyncio.Lock()
+
 CONFIG_PATH = MAIN_PATH / "mail" / "config.json"
 
 
@@ -84,6 +89,30 @@ def _send_via_qq(config: Dict[str, Any], to_email: str, subject: str, html: str)
     return _send_via_smtp(qq_config, to_email, subject, html)
 
 
+async def _mail_consumer():
+    """每秒处理一封邮件"""
+    while True:
+        try:
+            future, to_email, subject, html, config, provider = await _mail_queue.get()
+
+            try:
+                if provider == "qq":
+                    success, msg = await asyncio.to_thread(_send_via_qq, config, to_email, subject, html)
+                else:
+                    success, msg = await asyncio.to_thread(_send_via_smtp, config, to_email, subject, html)
+
+                if not future.done():
+                    future.set_result((success, msg))
+            except Exception as e:
+                if not future.done():
+                    future.set_result((False, f"发送失败: {e}"))
+
+            await asyncio.sleep(1)  # 速率限制：每秒最多一封
+        except Exception:
+            # 消费者循环异常，继续运行
+            await asyncio.sleep(1)
+
+
 async def send_stamina_email(
     to_email: str,
     uid: str,
@@ -96,6 +125,8 @@ async def send_stamina_email(
     bot_id: str = "",
     bot_self_id: str = "",
 ) -> Tuple[bool, str]:
+    global _consumer_task
+
     config = get_mail_config()
     provider = config.get("provider", "smtp")
 
@@ -111,9 +142,17 @@ async def send_stamina_email(
         bot_self_id,
     )
 
+    # 获取对应提供商的配置
     if provider == "qq":
         cfg = config.get("qq", {})
-        return await asyncio.to_thread(_send_via_qq, cfg, to_email, subject, html)
+    else:
+        cfg = config.get("smtp", {})
 
-    cfg = config.get("smtp", {})
-    return await asyncio.to_thread(_send_via_smtp, cfg, to_email, subject, html)
+    async with _queue_lock:
+        if _consumer_task is None or _consumer_task.done():
+            _consumer_task = asyncio.create_task(_mail_consumer())
+
+    future: asyncio.Future[Tuple[bool, str]] = asyncio.Future()
+    await _mail_queue.put((future, to_email, subject, html, cfg, provider))
+
+    return await future
