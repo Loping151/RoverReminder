@@ -60,8 +60,7 @@ async def switch_push(bot: Bot, ev: Event):
                 bot_id=ev.bot_id,
                 bot_self_id=ev.bot_self_id or "",
                 uid=uid,
-                user_email=auto_email,
-                email_fail_count=0,
+                user_email=auto_email
             )
             auto_email_msg = f"\n已设置默认邮箱：{auto_email}"
         else:
@@ -75,6 +74,7 @@ async def switch_push(bot: Bot, ev: Event):
             bot_self_id=ev.bot_self_id or "",
             uid=uid,
             stamina_push_switch="on",
+            email_fail_count=0,
         )
     else:
         await WavesStaminaRecord.upsert_user_settings(
@@ -82,7 +82,7 @@ async def switch_push(bot: Bot, ev: Event):
             bot_id=ev.bot_id,
             bot_self_id=ev.bot_self_id or "",
             uid=uid,
-            stamina_push_switch="off",
+            stamina_push_switch="off"
         )
 
     msg = f"uid {uid} 已开启体力推送！{auto_email_msg}" if enable else f"uid {uid} 已关闭体力推送！"
