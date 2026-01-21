@@ -162,7 +162,6 @@ class WavesStaminaRecord(BaseModel, table=True):
             and_(
                 cls.user_id == user_id,
                 cls.bot_id == bot_id,
-                cls.bot_self_id == bot_self_id,
                 cls.uid == uid,
             )
         )
@@ -170,6 +169,7 @@ class WavesStaminaRecord(BaseModel, table=True):
         record = result.scalars().first()
 
         if record:
+            record.bot_self_id = bot_self_id
             record.mr_query_time = mr_query_time
             record.mr_value = mr_value
             record.is_ck_valid = is_ck_valid
@@ -204,7 +204,6 @@ class WavesStaminaRecord(BaseModel, table=True):
             and_(
                 cls.user_id == user_id,
                 cls.bot_id == bot_id,
-                cls.bot_self_id == bot_self_id,
                 cls.uid == uid,
             )
         )
@@ -212,6 +211,7 @@ class WavesStaminaRecord(BaseModel, table=True):
         record = result.scalars().first()
 
         if record:
+            record.bot_self_id = bot_self_id
             record.is_ck_valid = is_ck_valid
             session.add(record)
             return True
@@ -245,7 +245,6 @@ class WavesStaminaRecord(BaseModel, table=True):
             and_(
                 cls.user_id == user_id,
                 cls.bot_id == bot_id,
-                cls.bot_self_id == bot_self_id,
                 cls.uid == uid,
             )
         )
@@ -253,6 +252,7 @@ class WavesStaminaRecord(BaseModel, table=True):
         record = result.scalars().first()
 
         if record:
+            record.bot_self_id = bot_self_id
             record.email_last_try_time = email_last_try_time
             record.email_send_success = email_send_success
             record.email_fail_count = email_fail_count
@@ -290,7 +290,6 @@ class WavesStaminaRecord(BaseModel, table=True):
             and_(
                 cls.user_id == user_id,
                 cls.bot_id == bot_id,
-                cls.bot_self_id == bot_self_id,
                 cls.uid == uid,
             )
         )
@@ -298,6 +297,7 @@ class WavesStaminaRecord(BaseModel, table=True):
         record = result.scalars().first()
 
         if record:
+            record.bot_self_id = bot_self_id
             for k, v in data.items():
                 if hasattr(record, k):
                     setattr(record, k, v)
@@ -329,25 +329,12 @@ class WavesStaminaRecord(BaseModel, table=True):
             and_(
                 cls.user_id == user_id,
                 cls.bot_id == bot_id,
-                cls.bot_self_id == bot_self_id,
                 cls.uid == uid,
             )
         )
         result = await session.execute(sql)
         record = result.scalars().first()
-        if record or bot_self_id == "":
-            return record
-
-        fallback_sql = select(cls).where(
-            and_(
-                cls.user_id == user_id,
-                cls.bot_id == bot_id,
-                cls.bot_self_id == "",
-                cls.uid == uid,
-            )
-        )
-        fallback_result = await session.execute(fallback_sql)
-        return fallback_result.scalars().first()
+        return record
 
     @classmethod
     @with_session
