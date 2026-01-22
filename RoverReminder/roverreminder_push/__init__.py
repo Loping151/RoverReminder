@@ -229,7 +229,7 @@ async def _handle_record(record: WavesStaminaRecord, threshold_default: int, now
         )
 
 
-@scheduler.scheduled_job("interval", minutes=1, id="roverreminder_check")
+@scheduler.scheduled_job("interval", minutes=6, id="roverreminder_check")
 async def roverreminder_check_task():
     if _check_lock.locked():
         logger.debug("[RoverReminder] 定时检查跳过：已有任务运行中")
