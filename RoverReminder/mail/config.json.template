@@ -14,9 +14,9 @@
     "host": "smtp.qq.com",
     "port": 465,
     "user": "123456789@qq.com",
-    "auth_code": "授权码",
+    "auth_code": "授权码，从QQ邮箱控制台获取",
     "sender": "123456789@qq.com",
-    "sender_name": "小维",
+    "sender_name": "Your Name",
     "use_ssl": true,
     "starttls": false
   }
