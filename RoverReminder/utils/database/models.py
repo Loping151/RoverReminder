@@ -8,8 +8,6 @@ from sqlalchemy.sql import and_
 from gsuid_core.logger import logger
 from gsuid_core.utils.database.base_models import Bind, User, BaseModel, with_session
 
-# 插件未发布阶段不执行迁移
-
 T_WavesBind = TypeVar("T_WavesBind", bound="WavesBind")
 T_WavesUser = TypeVar("T_WavesUser", bound="WavesUser")
 T_WavesStaminaRecord = TypeVar("T_WavesStaminaRecord", bound="WavesStaminaRecord")
