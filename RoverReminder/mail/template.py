@@ -12,7 +12,7 @@ TEMPLATE_PATH = MAIN_PATH / "mail" / "template.html"
 
 def _try_import_wwuid_draw():
     try:
-        from gsuid_core.plugins.XutheringWavesUID.XutheringWavesUID.wutheringwaves_stamina.draw_waves_stamina import (
+        from plugins.XutheringWavesUID.XutheringWavesUID.wutheringwaves_stamina.draw_waves_stamina import (
             _draw_stamina_img,
         )
         return _draw_stamina_img
