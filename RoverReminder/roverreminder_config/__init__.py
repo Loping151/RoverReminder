@@ -37,12 +37,12 @@ async def switch_push(bot: Bot, ev: Event):
             is_ck_valid=bool(ck),
         )
     except Exception:
-        logger.exception("[RoverReminder] 更新CK有效状态失败")
+        logger.exception("[体力推送·配置] 更新CK有效状态失败")
     if not ck:
         msg = f"uid {uid} 登录状态无效！无法设置推送开关"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
-    logger.info(f"[{ev.user_id}]尝试[{ev.command[0:2]}]了[{ev.text}]功能")
+    logger.info(f"[体力推送·配置] user_id={ev.user_id} 尝试[{ev.command[0:2]}]了[{ev.text}]功能")
 
     enable = "开启" in ev.command
     record = await WavesStaminaRecord.get_record(
@@ -120,7 +120,7 @@ async def set_push_email(bot: Bot, ev: Event):
             email_fail_count=0,
         )
     except Exception:
-        logger.exception("[RoverReminder] 设置邮箱失败")
+        logger.exception("[体力推送·配置] 设置邮箱失败")
         msg = f"uid {uid} 邮箱设置失败，请稍后重试"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 

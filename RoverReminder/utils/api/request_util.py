@@ -92,7 +92,7 @@ def check_send_master_info(code: int, msg: str, data: Optional[T] = None) -> boo
     import inspect
 
     callers = [f.function for f in inspect.stack()[5:8][::-1]]
-    logger.warning(f"[rover-reminder] {'.'.join(callers)} code: {code} msg: {msg} data: {data}")
+    logger.warning(f"[体力推送·UID工具] {'.'.join(callers)} code: {code} msg: {msg} data: {data}")
     return isinstance(msg, str) and msg != ""
 
 
