@@ -23,7 +23,6 @@ class WavesUser(User, table=True):
     __table_args__: Dict[str, Any] = {"extend_existing": True}
     cookie: str = Field(default="", title="Cookie")
     uid: str = Field(default=None, title="鸣潮UID")
-    record_id: Optional[str] = Field(default=None, title="记录ID")
     platform: str = Field(default="", title="ck平台")
     stamina_bg_value: str = Field(default="", title="体力背景")
     bbs_sign_switch: str = Field(default="off", title="自动社区签到")
