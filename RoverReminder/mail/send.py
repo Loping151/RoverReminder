@@ -130,8 +130,12 @@ async def send_stamina_email(
     config = get_mail_config()
     provider = config.get("provider", "smtp")
 
+    from ..utils.util import get_hide_uid_pref, hide_uid
+
+    uid_show = hide_uid(uid, user_pref=await get_hide_uid_pref(uid, user_id, bot_id))
+
     subject, html = await build_stamina_html(
-        uid,
+        uid_show,
         stamina,
         threshold,
         now_text,

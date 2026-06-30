@@ -20,4 +20,9 @@ CONFIG_DEFAULT: Dict[str, GSC] = {
         42,
         10000,
     ),
+    "HideUid": GsBoolConfig(
+        "隐藏uid",
+        "开启后，推送邮件中显示的UID将以 前2位 + **** + 后2位 的形式显示",
+        False,
+    ),
 }

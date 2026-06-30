@@ -30,6 +30,7 @@ class WavesUser(User, table=True):
     did: str = Field(default="", title="did")
     game_id: int = Field(default=3, title="GameID")
     is_login: bool = Field(default=False, title="是否waves登录")
+    hide_uid_self_value: str = Field(default="", title="隐藏UID")
     created_time: Optional[int] = Field(default=None, title="创建时间")
     last_used_time: Optional[int] = Field(default=None, title="最后使用时间")
 

@@ -5,6 +5,7 @@ from gsuid_core.logger import logger
 from gsuid_core.models import Event
 from gsuid_core.sv import SV, get_plugin_available_prefix
 
+from ..utils.util import get_hide_uid_pref, hide_uid
 from ..utils.database.models import WavesBind, WavesStaminaRecord
 from ..utils.api.requests import waves_api
 from .roverreminder_config import RoverReminderConfig
@@ -27,6 +28,8 @@ async def switch_push(bot: Bot, ev: Event):
         msg = f"您还未绑定鸣潮特征码, 请使用【{PREFIX}绑定uid】完成绑定！"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
+    uid_show = hide_uid(uid, user_pref=await get_hide_uid_pref(uid, ev.user_id, ev.bot_id))
+
     ck = await waves_api.get_self_waves_ck(uid, ev.user_id, ev.bot_id)
     try:
         await WavesStaminaRecord.update_ck_valid(
@@ -39,7 +42,7 @@ async def switch_push(bot: Bot, ev: Event):
     except Exception:
         logger.exception("[体力推送·配置] 更新CK有效状态失败")
     if not ck:
-        msg = f"uid {uid} 登录状态无效！无法设置推送开关"
+        msg = f"uid {uid_show} 登录状态无效！无法设置推送开关"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
     logger.info(f"[体力推送·配置] user_id={ev.user_id} 尝试[{ev.command[0:2]}]了[{ev.text}]功能")
@@ -64,7 +67,7 @@ async def switch_push(bot: Bot, ev: Event):
             )
             auto_email_msg = f"\n已设置默认邮箱：{auto_email}"
         else:
-            msg = f"uid {uid} 未设置邮箱，请先使用【{PREFIX}推送邮箱 邮箱】设置邮箱"
+            msg = f"uid {uid_show} 未设置邮箱，请先使用【{PREFIX}推送邮箱 邮箱】设置邮箱"
             return await bot.send((" " if at_sender else "") + msg, at_sender)
 
     if enable:
@@ -85,7 +88,7 @@ async def switch_push(bot: Bot, ev: Event):
             stamina_push_switch="off"
         )
 
-    msg = f"uid {uid} 已开启体力推送！{auto_email_msg}" if enable else f"uid {uid} 已关闭体力推送！"
+    msg = f"uid {uid_show} 已开启体力推送！{auto_email_msg}" if enable else f"uid {uid_show} 已关闭体力推送！"
     await bot.send((" " if at_sender else "") + msg, at_sender)
 
 
@@ -105,9 +108,11 @@ async def set_push_email(bot: Bot, ev: Event):
         msg = f"您还未绑定鸣潮特征码, 请使用【{PREFIX}绑定uid】完成绑定！"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
+    uid_show = hide_uid(uid, user_pref=await get_hide_uid_pref(uid, ev.user_id, ev.bot_id))
+
     ck = await waves_api.get_self_waves_ck(uid, ev.user_id, ev.bot_id)
     if not ck:
-        msg = f"uid {uid} 登录状态无效！无法查询！"
+        msg = f"uid {uid_show} 登录状态无效！无法查询！"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
     try:
@@ -121,10 +126,10 @@ async def set_push_email(bot: Bot, ev: Event):
         )
     except Exception:
         logger.exception("[体力推送·配置] 设置邮箱失败")
-        msg = f"uid {uid} 邮箱设置失败，请稍后重试"
+        msg = f"uid {uid_show} 邮箱设置失败，请稍后重试"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
-    msg = f"uid {uid} 邮箱设置成功"
+    msg = f"uid {uid_show} 邮箱设置成功"
     return await bot.send((" " if at_sender else "") + msg, at_sender)
 
 
@@ -146,9 +151,11 @@ async def set_push_threshold(bot: Bot, ev: Event):
         msg = f"您还未绑定鸣潮特征码, 请使用【{PREFIX}绑定uid】完成绑定！"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
+    uid_show = hide_uid(uid, user_pref=await get_hide_uid_pref(uid, ev.user_id, ev.bot_id))
+
     ck = await waves_api.get_self_waves_ck(uid, ev.user_id, ev.bot_id)
     if not ck:
-        msg = f"uid {uid} 登录状态无效，请重新登录后再设置阈值"
+        msg = f"uid {uid_show} 登录状态无效，请重新登录后再设置阈值"
         return await bot.send((" " if at_sender else "") + msg, at_sender)
 
     await WavesStaminaRecord.upsert_user_settings(
@@ -158,5 +165,5 @@ async def set_push_threshold(bot: Bot, ev: Event):
         uid=uid,
         stamina_threshold=value,
     )
-    msg = f"uid {uid} 体力阈值已设置为 {value}"
+    msg = f"uid {uid_show} 体力阈值已设置为 {value}"
     return await bot.send((" " if at_sender else "") + msg, at_sender)
