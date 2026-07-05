@@ -5,8 +5,11 @@ from sqlalchemy import delete, null, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import and_
 
+from gsuid_core.server import on_core_start
 from gsuid_core.logger import logger
 from gsuid_core.utils.database.base_models import Bind, User, BaseModel, with_session
+
+from .auto_migrate import auto_add_missing_columns
 
 T_WavesBind = TypeVar("T_WavesBind", bound="WavesBind")
 T_WavesUser = TypeVar("T_WavesUser", bound="WavesUser")
@@ -379,3 +382,8 @@ class WavesStaminaRecord(BaseModel, table=True):
         )
         result = await session.execute(sql)
         return result.rowcount
+
+
+@on_core_start
+async def _roverreminder_auto_migrate():
+    await auto_add_missing_columns(__name__, log_prefix="[体力推送·补列]")
